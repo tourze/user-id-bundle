@@ -16,5 +16,6 @@ class UserIdentityServiceImpl implements UserIdentityService
 
     public function findByUser(UserInterface $user): iterable
     {
+        return new \ArrayIterator([]);
     }
 }
