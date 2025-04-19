@@ -25,5 +25,10 @@
     "psr-4": {
       "Tourze\\UserIDBundle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tourze\\UserIDBundle\\Tests\\": "tests"
+    }
   }
 }
