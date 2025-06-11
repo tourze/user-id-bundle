@@ -31,7 +31,7 @@ class UserIDExtensionTest extends TestCase
         $exception = null;
         try {
             $this->extension->load([], $this->container);
-        } catch (\Exception $e) {
+        } catch  (\Throwable $e) {
             $exception = $e;
         }
 

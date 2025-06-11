@@ -31,7 +31,7 @@ class SystemUserTest extends TestCase
         $exception = null;
         try {
             $user->eraseCredentials();
-        } catch (\Exception $e) {
+        } catch  (\Throwable $e) {
             $exception = $e;
         }
 
