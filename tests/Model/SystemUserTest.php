@@ -17,8 +17,6 @@ class SystemUserTest extends TestCase
     {
         $user = new SystemUser();
         $roles = $user->getRoles();
-
-        $this->assertIsArray($roles);
         $this->assertContains('ROLE_ADMIN', $roles);
         $this->assertCount(1, $roles);
     }
