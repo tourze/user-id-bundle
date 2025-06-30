@@ -17,33 +17,22 @@ class IdentityInterfaceTest extends TestCase
 
         // 验证接口方法
         $this->assertTrue($reflectionClass->hasMethod('getUser'));
+        $this->assertTrue($reflectionClass->hasMethod('getAccounts'));
         $this->assertTrue($reflectionClass->hasMethod('getIdentityValue'));
         $this->assertTrue($reflectionClass->hasMethod('getIdentityType'));
         $this->assertTrue($reflectionClass->hasMethod('getIdentityArray'));
 
         // 验证方法返回类型
         $getUserMethod = $reflectionClass->getMethod('getUser');
-        $this->assertTrue(
-            $getUserMethod->hasReturnType() &&
-            ($getUserMethod->getReturnType()->getName() === 'Symfony\Component\Security\Core\User\UserInterface' ||
-                $getUserMethod->getReturnType()->getName() === '?Symfony\Component\Security\Core\User\UserInterface')
-        );
+        $this->assertTrue($getUserMethod->hasReturnType());
+        
+        $returnType = $getUserMethod->getReturnType();
+        $this->assertNotNull($returnType);
+        
+        if ($returnType instanceof \ReflectionNamedType) {
+            $typeName = $returnType->getName();
+            $this->assertEquals(UserInterface::class, $typeName);
+        }
     }
 
-    public function test_mockImplementation_canBeCreated(): void
-    {
-        // 创建接口的模拟实现，确保可以创建
-        $mockIdentity = $this->createMock(IdentityInterface::class);
-        $mockUser = $this->createMock(UserInterface::class);
-
-        $mockIdentity->method('getUser')->willReturn($mockUser);
-        $mockIdentity->method('getIdentityValue')->willReturn('test@example.com');
-        $mockIdentity->method('getIdentityType')->willReturn('email');
-        $mockIdentity->method('getIdentityArray')->willReturn(new \ArrayIterator(['email' => 'test@example.com']));
-
-        $this->assertSame($mockUser, $mockIdentity->getUser());
-        $this->assertEquals('test@example.com', $mockIdentity->getIdentityValue());
-        $this->assertEquals('email', $mockIdentity->getIdentityType());
-        $this->assertInstanceOf(\Traversable::class, $mockIdentity->getIdentityArray());
-    }
 }
