@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Model;
 
 use HughCube\StaticInstanceTrait;
@@ -21,7 +23,11 @@ class SystemUser implements UserInterface, \Stringable
 
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function __serialize(): array
+    {
+        return [];
     }
 
     public function getUserIdentifier(): string

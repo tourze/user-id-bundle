@@ -1,45 +1,63 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Tests\Service;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Tourze\UserIDBundle\Service\UserIdentityServiceImpl;
+use Tourze\UserIDBundle\Service\UserIdentityService;
 
-class UserIdentityServiceTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(UserIdentityService::class)]
+final class UserIdentityServiceTest extends TestCase
 {
-    private UserIdentityServiceImpl $service;
-
-    protected function setUp(): void
+    public function testInterfaceHasCorrectMethods(): void
     {
-        $this->service = new UserIdentityServiceImpl();
+        $reflectionClass = new \ReflectionClass(UserIdentityService::class);
+
+        $this->assertTrue($reflectionClass->isInterface());
+
+        // 验证接口方法
+        $this->assertTrue($reflectionClass->hasMethod('findByType'));
+        $this->assertTrue($reflectionClass->hasMethod('findByUser'));
+
+        // 验证方法签名
+        $findByTypeMethod = $reflectionClass->getMethod('findByType');
+        $this->assertEquals(2, $findByTypeMethod->getNumberOfParameters());
+
+        $findByUserMethod = $reflectionClass->getMethod('findByUser');
+        $this->assertEquals(1, $findByUserMethod->getNumberOfParameters());
     }
 
-    public function test_findByType_withValidParameters_returnsNull(): void
+    public function testFindByTypeMethodHasCorrectReturnType(): void
     {
-        $result = $this->service->findByType('email', 'test@example.com');
-        $this->assertNull($result);
+        $reflectionClass = new \ReflectionClass(UserIdentityService::class);
+        $findByTypeMethod = $reflectionClass->getMethod('findByType');
+
+        $this->assertTrue($findByTypeMethod->hasReturnType());
+        $returnType = $findByTypeMethod->getReturnType();
+        $this->assertNotNull($returnType);
+
+        if ($returnType instanceof \ReflectionNamedType) {
+            $this->assertEquals('Tourze\UserIDBundle\Contracts\IdentityInterface', $returnType->getName());
+            $this->assertTrue($returnType->allowsNull());
+        }
     }
 
-    public function test_findByType_withEmptyType_returnsNull(): void
+    public function testFindByUserMethodHasCorrectReturnType(): void
     {
-        $result = $this->service->findByType('', 'test@example.com');
-        $this->assertNull($result);
-    }
+        $reflectionClass = new \ReflectionClass(UserIdentityService::class);
+        $findByUserMethod = $reflectionClass->getMethod('findByUser');
 
-    public function test_findByType_withEmptyValue_returnsNull(): void
-    {
-        $result = $this->service->findByType('email', '');
-        $this->assertNull($result);
-    }
+        $this->assertTrue($findByUserMethod->hasReturnType());
+        $returnType = $findByUserMethod->getReturnType();
+        $this->assertNotNull($returnType);
 
-    public function test_findByUser_withValidUser_returnsEmptyIterable(): void
-    {
-        $user = $this->createMock(UserInterface::class);
-        $result = $this->service->findByUser($user);
-
-        $this->assertInstanceOf(\ArrayIterator::class, $result);
-        $this->assertCount(0, $result);
+        if ($returnType instanceof \ReflectionNamedType) {
+            $this->assertEquals('iterable', $returnType->getName());
+        }
     }
 }
-

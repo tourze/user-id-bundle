@@ -1,19 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Tourze\UserIDBundle\Model\SystemUser;
 
-class SystemUserTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(SystemUser::class)]
+final class SystemUserTest extends TestCase
 {
-    public function test_toString_returnsUserIdentifier(): void
+    public function testToStringReturnsUserIdentifier(): void
     {
         $user = new SystemUser();
-        $this->assertEquals('system', (string)$user);
+        $this->assertEquals('system', (string) $user);
     }
 
-    public function test_getRoles_returnsAdminRole(): void
+    public function testGetRolesReturnsAdminRole(): void
     {
         $user = new SystemUser();
         $roles = $user->getRoles();
@@ -21,24 +28,27 @@ class SystemUserTest extends TestCase
         $this->assertCount(1, $roles);
     }
 
-    public function test_eraseCredentials_doesNotThrowException(): void
+    public function testSerializeReturnsEmptyArray(): void
     {
         $user = new SystemUser();
+        $serialized = $user->__serialize();
 
-        // 确保方法不抛出异常
-        $exception = null;
-        try {
-            $user->eraseCredentials();
-        } catch (\Throwable $e) {
-            $exception = $e;
-        }
-
-        $this->assertNull($exception);
+        $this->assertIsArray($serialized);
+        $this->assertEmpty($serialized);
     }
 
-    public function test_getUserIdentifier_returnsSystem(): void
+    public function testGetUserIdentifierReturnsSystem(): void
     {
         $user = new SystemUser();
         $this->assertEquals('system', $user->getUserIdentifier());
+    }
+
+    public function testEraseCredentialsDoesNotThrowException(): void
+    {
+        $user = new SystemUser();
+        /** @phpstan-ignore method.deprecated */
+        $user->eraseCredentials();
+
+        $this->expectNotToPerformAssertions();
     }
 }

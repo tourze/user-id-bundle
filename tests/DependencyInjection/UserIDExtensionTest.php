@@ -1,40 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Tests\DependencyInjection;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Tourze\PHPUnitSymfonyUnitTest\AbstractDependencyInjectionExtensionTestCase;
 use Tourze\UserIDBundle\DependencyInjection\UserIDExtension;
 
-class UserIDExtensionTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(UserIDExtension::class)]
+final class UserIDExtensionTest extends AbstractDependencyInjectionExtensionTestCase
 {
-    private UserIDExtension $extension;
-    private ContainerBuilder $container;
-
-    protected function setUp(): void
+    protected function getExtension(): UserIDExtension
     {
-        $this->extension = new UserIDExtension();
-        $this->container = new ContainerBuilder();
+        return new UserIDExtension();
     }
 
-    public function test_load_loadsServicesYaml(): void
+    public function testLoadLoadsServicesPhp(): void
     {
-        $this->extension->load([], $this->container);
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $extension = new UserIDExtension();
+
+        $extension->load([], $container);
 
         // 验证服务定义存在
-        $this->assertTrue($this->container->has('Tourze\UserIDBundle\Service\UserIdentityServiceImpl'));
+        $this->assertTrue($container->has('Tourze\UserIDBundle\Service\UserIdentityServiceImpl'));
     }
 
-    public function test_load_withEmptyConfigs_doesNotThrowException(): void
+    public function testLoadWithEmptyConfigsDoesNotThrowException(): void
     {
-        // 确保方法不抛出异常
-        $exception = null;
-        try {
-            $this->extension->load([], $this->container);
-        } catch (\Throwable $e) {
-            $exception = $e;
-        }
+        $this->expectNotToPerformAssertions();
 
-        $this->assertNull($exception);
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.environment', 'test');
+        $extension = new UserIDExtension();
+        $extension->load([], $container);
     }
 }

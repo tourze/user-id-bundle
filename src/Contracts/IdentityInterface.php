@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Contracts;
 
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,6 +38,8 @@ interface IdentityInterface
 
     /**
      * 身份数组
+     *
+     * @return \Traversable<string, mixed>
      */
     public function getIdentityArray(): \Traversable;
 }

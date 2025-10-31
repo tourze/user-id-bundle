@@ -1,14 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Tests\Contracts;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Tourze\UserIDBundle\Contracts\IdentityInterface;
 
-class IdentityInterfaceTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(IdentityInterface::class)]
+final class IdentityInterfaceTest extends TestCase
 {
-    public function test_interfaceMethods_areCorrectlyDefined(): void
+    public function testInterfaceMethodsAreCorrectlyDefined(): void
     {
         // 使用反射API检查接口定义是否符合预期
         $reflectionClass = new \ReflectionClass(IdentityInterface::class);
@@ -25,14 +32,13 @@ class IdentityInterfaceTest extends TestCase
         // 验证方法返回类型
         $getUserMethod = $reflectionClass->getMethod('getUser');
         $this->assertTrue($getUserMethod->hasReturnType());
-        
+
         $returnType = $getUserMethod->getReturnType();
         $this->assertNotNull($returnType);
-        
+
         if ($returnType instanceof \ReflectionNamedType) {
             $typeName = $returnType->getName();
             $this->assertEquals(UserInterface::class, $typeName);
         }
     }
-
 }

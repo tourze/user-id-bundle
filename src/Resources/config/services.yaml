@@ -1,8 +1,11 @@
 services:
-  # default configuration for services in *this* file
   _defaults:
-    autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    autowire: true
+    autoconfigure: true
 
-  Tourze\UserIDBundle\Service\:
-    resource: '../../Service/'
+  Tourze\UserIDBundle\Service\UserIdentityServiceImpl:
+    public: true
+
+  Tourze\UserIDBundle\Service\UserIdentityService:
+    alias: Tourze\UserIDBundle\Service\UserIdentityServiceImpl
+    public: true

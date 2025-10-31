@@ -1,13 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tourze\UserIDBundle\Tests\Model;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Tourze\UserIDBundle\Model\Identity;
 
-class IdentityTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(Identity::class)]
+final class IdentityTest extends TestCase
 {
-    public function test_construct_withValidParameters_setsProperties(): void
+    public function testConstructWithValidParametersSetsProperties(): void
     {
         $id = '123';
         $type = 'email';
@@ -22,39 +29,39 @@ class IdentityTest extends TestCase
         $this->assertEquals($extra, $identity->getExtra());
     }
 
-    public function test_getId_returnsCorrectId(): void
+    public function testGetIdReturnsCorrectId(): void
     {
         $identity = new Identity('123', 'email', 'test@example.com');
         $this->assertEquals('123', $identity->getId());
     }
 
-    public function test_getIdentityValue_returnsCorrectValue(): void
+    public function testGetIdentityValueReturnsCorrectValue(): void
     {
         $identity = new Identity('123', 'email', 'test@example.com');
         $this->assertEquals('test@example.com', $identity->getIdentityValue());
     }
 
-    public function test_getIdentityType_returnsCorrectType(): void
+    public function testGetIdentityTypeReturnsCorrectType(): void
     {
         $identity = new Identity('123', 'email', 'test@example.com');
         $this->assertEquals('email', $identity->getIdentityType());
     }
 
-    public function test_getExtra_returnsCorrectExtraData(): void
+    public function testGetExtraReturnsCorrectExtraData(): void
     {
-        $extra = ['verified' => true, 'createdAt' => '2023-01-01'];
+        $extra = ['verified' => true, 'createTime' => '2023-01-01'];
         $identity = new Identity('123', 'email', 'test@example.com', $extra);
 
         $this->assertEquals($extra, $identity->getExtra());
     }
 
-    public function test_getExtra_withEmptyExtraData_returnsEmptyArray(): void
+    public function testGetExtraWithEmptyExtraDataReturnsEmptyArray(): void
     {
         $identity = new Identity('123', 'email', 'test@example.com');
         $this->assertEquals([], $identity->getExtra());
     }
 
-    public function test_toArray_returnsCorrectStructure(): void
+    public function testToArrayReturnsCorrectStructure(): void
     {
         $identity = new Identity('123', 'email', 'test@example.com');
 
@@ -67,9 +74,9 @@ class IdentityTest extends TestCase
         $this->assertEquals($expected, $identity->toArray());
     }
 
-    public function test_toArray_withExtraData_includesExtraDataInResult(): void
+    public function testToArrayWithExtraDataIncludesExtraDataInResult(): void
     {
-        $extra = ['verified' => true, 'createdAt' => '2023-01-01'];
+        $extra = ['verified' => true, 'createTime' => '2023-01-01'];
         $identity = new Identity('123', 'email', 'test@example.com', $extra);
 
         $expected = [
@@ -77,7 +84,7 @@ class IdentityTest extends TestCase
             'identityType' => 'email',
             'identityValue' => 'test@example.com',
             'verified' => true,
-            'createdAt' => '2023-01-01',
+            'createTime' => '2023-01-01',
         ];
 
         $this->assertEquals($expected, $identity->toArray());
